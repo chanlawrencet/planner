@@ -45,7 +45,7 @@ class Week extends React.Component {
           height: '90%'
         }}
       >
-        {days.map(currDay => {return (<Day currDay={currDay}/>)})}
+        {days.map(currDay => {return (<Day key={currDay.toString()} currDay={currDay}/>)})}
       </div>
     );
   }
