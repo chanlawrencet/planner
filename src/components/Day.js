@@ -6,9 +6,8 @@ import Hour from "./Hour";
 class Day extends React.Component {
   constructor(props) {
     super(props);
-    const {currDay} = this.props;
     this.state = {
-      hours: this.makeHours(currDay)
+      hours: this.makeHours(this.props.currDay)
     }
   }
 
@@ -34,8 +33,21 @@ class Day extends React.Component {
     }
   }
 
+  handleSelect(hourSelected) {
+    const {select, selected} = this.props;
+    const hourBefore = new moment(hourSelected).add(1, 'hour');
+    const hourAfter = new moment(hourSelected).subtract(1, 'hour');
+    if (
+      selected.has(hourBefore.toString()) ||
+      selected.has(hourAfter.toString()) ||
+      selected.size === 0
+    ) {
+      select(hourSelected);
+    }
+  }
+
   render() {
-    const {currDay} = this.props;
+    const {currDay, selected} = this.props;
     const {hours} = this.state;
     return (
       <div
@@ -68,7 +80,14 @@ class Day extends React.Component {
             height: '100%',
           }}
           >
-          {hours.map(currHour => <Hour key={currHour.toString()} currHour={currHour}/>)}
+          {hours.map( hour =>
+            <Hour
+              key={hour.hours()}
+              clicked={selected.has(hour.toString())}
+              currHour={hour}
+              handleSelect={this.handleSelect.bind(this)}
+            />
+          )}
         </div>
       </div>
     )

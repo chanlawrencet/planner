@@ -1,17 +1,8 @@
 import React from "react";
 
 class Hour extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      clicked: false,
-    }
-  }
-
-
   render() {
-    const {currHour} = this.props;
-    const {clicked} = this.state;
+    const {currHour, clicked, hourKey, handleSelect} = this.props;
     return (
       <div
         style={{
@@ -20,21 +11,17 @@ class Hour extends React.Component {
           height: '4.166%',
           borderStyle: 'solid',
           margin: '-3px 0 0 -3px',
-          backgroundColor: clicked ? 'green': 'red' ,
+          backgroundColor: clicked ? 'green': 'pink' ,
           userSelect: 'none'
         }}
         onMouseDown={(e) =>{
           if (e.buttons === 1) {
-            this.setState({
-              clicked: !clicked,
-            })
+            handleSelect(currHour)
           }
         }}
         onMouseEnter={(e) =>{
           if (e.buttons === 1) {
-            this.setState({
-              clicked: !clicked,
-            })
+            handleSelect(currHour)
           }
         }}
       >

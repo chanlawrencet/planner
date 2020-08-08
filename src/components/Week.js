@@ -8,7 +8,7 @@ class Week extends React.Component {
     super(props);
     const {newStart} = this.props;
     this.state = {
-      days: this.makeDays(newStart)
+      days: this.makeDays(newStart),
     }
   }
 
@@ -35,7 +35,8 @@ class Week extends React.Component {
   }
 
   render() {
-    const {days} = this.state;
+    const {days, frozen} = this.state;
+    const {select, deselect, selected, selectedDayOfWeek} = this.props;
     return (
       <div
         style={{
@@ -45,7 +46,28 @@ class Week extends React.Component {
           height: '90%'
         }}
       >
-        {days.map(currDay => {return (<Day key={currDay.toString()} currDay={currDay}/>)})}
+        {days.map(currDay => {
+
+          if (selectedDayOfWeek !== null && selectedDayOfWeek !== currDay.weekday()){
+            return (
+              <Day
+                key={currDay.toString()}
+                currDay={currDay}
+                select={() => {}}
+                deselect={() => {}}
+                selected={new Set()}
+              />
+            )
+          }
+          return (
+          <Day
+            key={currDay.toString()}
+            currDay={currDay}
+            select={select}
+            deselect={deselect}
+            selected={selected}
+          />)
+        })}
       </div>
     );
   }
