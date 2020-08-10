@@ -47,15 +47,15 @@ class Day extends React.Component {
   }
 
   render() {
-    const {currDay, selected} = this.props;
+    const {currDay, selected, showPicker} = this.props;
     const {hours} = this.state;
+
+    const isToday = new moment().format('YYYY MM DD') === currDay.format('YYYY MM DD');
     return (
       <div
         style={{
-          // borderStyle: 'solid',
           flexGrow: 1,
           height: '100%',
-          // margin: '-3px 0 0 -3px'
       }}
       >
         <div
@@ -64,7 +64,8 @@ class Day extends React.Component {
             flexDirection: 'column',
             alignItems: 'center',
             marginBottom: 10,
-            userSelect: 'none'
+            userSelect: 'none',
+            color: isToday ? 'blue' : 'black'
           }}
         >
           <div>
@@ -78,6 +79,10 @@ class Day extends React.Component {
           style={{
             flexGrow: 1,
             height: '100%',
+          }}
+          onMouseUp={() => {
+            console.log('mouse up')
+            showPicker(selected);
           }}
           >
           {hours.map( hour =>

@@ -11,7 +11,9 @@ class Hour extends React.Component {
           height: '4.166%',
           borderStyle: 'solid',
           margin: '-3px 0 0 -3px',
-          backgroundColor: clicked ? 'green': 'pink' ,
+          borderWidth: .5,
+          borderColor: clicked ? 'white' : 'grey',
+          backgroundColor: clicked ? 'green': 'white' ,
           userSelect: 'none'
         }}
         onMouseDown={(e) =>{

@@ -3,7 +3,7 @@ import './App.css';
 import Week from "./components/Week";
 import moment from "moment";
 import {monthParser} from "./components/helpers";
-import Picker from "./components/Picker";
+import Sidebar from "./components/Sidebar";
 
 class Planner extends React.Component {
   constructor(props) {
@@ -14,7 +14,6 @@ class Planner extends React.Component {
       showPicker: false,
       data: this.props.data,
       selected: new Set(),
-      selectedDayOfWeek: null,
     }
   }
 
@@ -40,9 +39,10 @@ class Planner extends React.Component {
     })
   }
 
-  showPicker() {
+  showPicker(selected) {
     this.setState({
       showPicker: true,
+      selected,
     });
   }
 
@@ -52,35 +52,17 @@ class Planner extends React.Component {
     })
   }
 
-  select(toSelect) {
-    const {selected, selectedDayOfWeek} = this.state;
-    selected.add(toSelect.toString());
-    if (selectedDayOfWeek === null) {
-      this.setState({
-        selected,
-        selectedDayOfWeek: toSelect.weekday(),
-      })
-    } else {
-      this.setState({selected})
-    }
-  }
-
-  deselect(toDeselect) {
-    const {selected} = this.state;
-    selected.delete(toDeselect.toString());
-    this.setState({selected})
-  }
-
   render() {
     console.log(this.state);
     const {currStart, showPicker, data, selected, selectedDayOfWeek} = this.state;
-
+    const {handleSubmit} = this.props;
     const monthString = monthParser(currStart.month());
     return (
       <div
         style={{
           margin: 20,
           height: '90vh',
+          position: 'relative',
         }}
       >
         <div
@@ -118,15 +100,27 @@ class Planner extends React.Component {
             {monthString[0].toUpperCase() + monthString.substring(1) + ' ' + currStart.year()}
           </div>
         </div>
-        <Week
-          newStart={new moment(currStart)}
-          data={data}
-          select={this.select.bind(this)}
-          deselect={this.deselect.bind(this)}
-          selected={selected}
-          selectedDayOfWeek={selectedDayOfWeek}
-        />
-        {showPicker && <Picker/>}
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            flexDirection: 'row',
+            height: '100%'
+          }}
+        >
+          <Sidebar
+            currStart={currStart}
+            selected={selected}
+            showPicker={showPicker}
+            handleSubmit={handleSubmit}
+          />
+          <Week
+            newStart={new moment(currStart)}
+            data={data}
+            selectedDayOfWeek={selectedDayOfWeek}
+            showPicker={this.showPicker.bind(this)}
+          />
+        </div>
       </div>
     );
   }

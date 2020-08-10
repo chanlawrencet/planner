@@ -9,6 +9,8 @@ class Week extends React.Component {
     const {newStart} = this.props;
     this.state = {
       days: this.makeDays(newStart),
+      selected: new Set(),
+      selectedDayOfWeek: null,
     }
   }
 
@@ -28,6 +30,25 @@ class Week extends React.Component {
     return days;
   }
 
+  select(toSelect) {
+    const {selected, selectedDayOfWeek} = this.state;
+    selected.add(toSelect.toString());
+    if (selectedDayOfWeek === null) {
+      this.setState({
+        selected,
+        selectedDayOfWeek: toSelect.weekday(),
+      })
+    } else {
+      this.setState({selected})
+    }
+  }
+
+  deselect(toDeselect) {
+    const {selected} = this.state;
+    selected.delete(toDeselect.toString());
+    this.setState({selected})
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.newStart !== this.props.newStart) {
       this.updateWeek(this.props.newStart);
@@ -35,15 +56,16 @@ class Week extends React.Component {
   }
 
   render() {
-    const {days, frozen} = this.state;
-    const {select, deselect, selected, selectedDayOfWeek} = this.props;
+    const {days, selected, selectedDayOfWeek} = this.state;
+    const {showPicker} = this.props;
     return (
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-evenly',
           flexDirection: 'row',
-          height: '90%'
+          height: '90%',
+          width: '100%'
         }}
       >
         {days.map(currDay => {
@@ -56,6 +78,7 @@ class Week extends React.Component {
                 select={() => {}}
                 deselect={() => {}}
                 selected={new Set()}
+                showPicker={() => {}}
               />
             )
           }
@@ -63,9 +86,10 @@ class Week extends React.Component {
           <Day
             key={currDay.toString()}
             currDay={currDay}
-            select={select}
-            deselect={deselect}
+            select={this.select.bind(this)}
+            deselect={this.deselect.bind(this)}
             selected={selected}
+            showPicker={showPicker}
           />)
         })}
       </div>
